@@ -5,10 +5,10 @@ import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 function Header() {
   const { pathname } = useLocation();
-  let isLogin = pathname == "/";
+  let isLogin = pathname === "/";
   return (
     <header className="flex justify-between px-[1rem] border-b-[#BEBCBD] border-b-[1px]">
-      <img src={logo} className="h-[80px] " />
+      <img alt="room-mate-dhoondo-logo" src={logo} className="h-[80px] " />
       <div className="mr-[2rem] flex justify-center items-center">
         <Link to="/">
           <button

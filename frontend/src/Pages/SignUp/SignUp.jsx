@@ -10,14 +10,21 @@ let initialFormState = { email: "", password: "", agree: false };
 function SignUP() {
   const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState(initialFormState);
+  const [error, setError] = useState({ email: null, password: null });
 
   function hideOnClickHandler() {
     setShowPassword((prev) => !prev);
   }
 
   function formOnChangeHandler(e, bool) {
+    let name = e.target.name;
+    if (name === "email") {
+      validateEmail(e.target.value);
+    } else if (name === "password") {
+      validatePassword(e.target.value);
+    }
     let change = {};
-    if (e.target.name == "agree") {
+    if (e.target.name === "agree") {
       setForm((prev) => {
         return { ...prev, agree: !prev.agree };
       });
@@ -29,9 +36,40 @@ function SignUP() {
     });
   }
 
-  function validateEmail() {}
+  function validateEmail(email) {
+    const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+    let isEmailValid = emailRegex.test(email);
+    if (!isEmailValid) {
+      setError((prev) => {
+        return { ...prev, email: "Please enter a valid email" };
+      });
+    } else {
+      setError((prev) => {
+        return { ...prev, email: null };
+      });
+    }
+    return isEmailValid;
+  }
 
-  function validatePassword() {}
+  function validatePassword(password) {
+    const passwordRegex =
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+    const isPasswordValid = passwordRegex.test(password);
+    if (!isPasswordValid) {
+      setError((prev) => {
+        return {
+          ...prev,
+          password:
+            "Password must be at least 8 characters long and include a mix of letters, numbers, and symbols.",
+        };
+      });
+    } else {
+      setError((prev) => {
+        return { ...prev, password: null };
+      });
+    }
+    return isPasswordValid;
+  }
 
   function signUpClickHandler() {
     console.log("form", form);
@@ -70,6 +108,9 @@ function SignUP() {
                 placeholder="designer@gmail.com"
                 className=" mt-2 rounded-[8px] border-[#3C4242] border-[1px] w-full p-[0.75rem] "
               />
+              {error?.email ? (
+                <p className="text-[14px] mt-1 text-[#EE1D52]">{error.email}</p>
+              ) : null}
             </div>
 
             <div className="w-full mb-6 flex flex-col">
@@ -94,10 +135,15 @@ function SignUP() {
                 className="mt-2 rounded-[8px] border-[#3C4242] border-[1px] w-full p-[0.75rem] "
               />
 
-              <span className="text-[#807D7E] text-[14px] mt-1">
+              <span className="text-[#807D7E] text-[14px] mt-1 hidden">
                 Use 8 or more characters with a mix of letters, numbers &
                 symbols
               </span>
+              {error?.password ? (
+                <p className="text-[14px] mt-1 text-[#EE1D52]">
+                  {error.password}
+                </p>
+              ) : null}
             </div>
 
             <div className="flex items-center text-[#807D7E] text-[14px] w-full mb-10">
@@ -113,7 +159,10 @@ function SignUP() {
 
             <button
               onClick={signUpClickHandler}
-              className="bg-[#06105A] px-[2rem] py-[0.75rem] text-white rounded-[8px] self-start"
+              disabled={
+                error.email || error.password || !form.agree ? true : false
+              }
+              className="bg-[#06105A] px-[2rem] py-[0.75rem] text-white rounded-[8px] self-start disabled:hover:cursor-not-allowed"
             >
               {" "}
               Sign Up

@@ -10,19 +10,43 @@ let initialFormState = { email: "", password: "" };
 function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState(initialFormState);
+  const [error, setError] = useState({ email: null, password: null });
 
   function hideOnClickHandler() {
     setShowPassword((prev) => !prev);
   }
 
   function formOnChangeHandler(e, bool) {
+    let name = e.target.name;
+    if (name === "email") {
+      validateEmail(e.target.value);
+    } else if (name === "password") {
+      validatePassword(e.target.value);
+    }
     let change = {};
-    change[e.target.name] = e.target.value;
+    change[name] = e.target.value;
     setForm((prev) => {
       return { ...prev, ...change };
     });
   }
 
+  function validateEmail(email) {
+    const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+    let isEmailValid = emailRegex.test(email);
+    console.log("isEmailValid", isEmailValid);
+    if (!isEmailValid) {
+      setError((prev) => {
+        return { ...prev, email: "Please enter a valid email" };
+      });
+    } else {
+      setError((prev) => {
+        return { ...prev, email: null };
+      });
+    }
+    return isEmailValid;
+  }
+
+  function validatePassword(password) {}
   function signInClickHandler() {
     console.log("form", form);
     setForm(initialFormState);
@@ -57,6 +81,9 @@ function SignIn() {
                 onChange={formOnChangeHandler}
                 className=" mt-2 rounded-[8px] border-[#3C4242] border-[1px] w-full p-[0.75rem] "
               />
+              {error?.email ? (
+                <p className="text-[14px] mt-1 text-[#EE1D52]">{error.email}</p>
+              ) : null}
             </div>
 
             <div className="w-full mb-8 flex flex-col">
@@ -89,7 +116,8 @@ function SignIn() {
 
             <button
               onClick={signInClickHandler}
-              className="bg-[#06105A] px-[2rem] py-[0.75rem] text-white rounded-[8px] self-start"
+              disabled={error.email || error.password ? true : false}
+              className="bg-[#06105A] px-[2rem] py-[0.75rem] text-white rounded-[8px] self-start disabled:hover:cursor-not-allowed"
             >
               {" "}
               Sign In
