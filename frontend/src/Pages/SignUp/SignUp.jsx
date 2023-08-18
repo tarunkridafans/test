@@ -17,7 +17,7 @@ function SignUP() {
 
   function formOnChangeHandler(e, bool) {
     let change = {};
-    if ((e.target.name = "agree")) {
+    if (e.target.name == "agree") {
       setForm((prev) => {
         return { ...prev, agree: !prev.agree };
       });
