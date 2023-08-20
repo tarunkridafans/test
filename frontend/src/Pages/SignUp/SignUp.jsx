@@ -5,6 +5,7 @@ import { FcGoogle } from "react-icons/fc";
 import { BsEyeFill } from "react-icons/bs";
 import { BsEyeSlashFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 let initialFormState = { email: "", password: "", agree: false };
@@ -12,6 +13,7 @@ function SignUP() {
   const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState(initialFormState);
   const [formError, setFormError] = useState({ email: null, password: null });
+  const navigate = useNavigate();
 
   function hideOnClickHandler() {
     setShowPassword((prev) => !prev);
@@ -76,6 +78,7 @@ function SignUP() {
     console.log("form", form);
     setForm(initialFormState);
     toast.success("You have succesfully signed up!");
+    navigate("/");
   }
   return (
     <div className="flex flex-col h-screen">
@@ -125,7 +128,11 @@ function SignUP() {
                 >
                   <span className="mr-2">
                     {" "}
-                    {showPassword ? <BsEyeFill /> : <BsEyeSlashFill />}
+                    {showPassword ? (
+                      <BsEyeFill size={20} color={"#807D7E"} />
+                    ) : (
+                      <BsEyeSlashFill size={20} color={"#807D7E"} />
+                    )}
                   </span>{" "}
                   {showPassword ? "Show" : "Hide"}
                 </span>

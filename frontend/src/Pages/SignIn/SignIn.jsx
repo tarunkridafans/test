@@ -5,12 +5,15 @@ import { FcGoogle } from "react-icons/fc";
 import { BsEyeFill } from "react-icons/bs";
 import { BsEyeSlashFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 let initialFormState = { email: "", password: "" };
 function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState(initialFormState);
   const [error, setError] = useState({ email: null, password: null });
+  const navigate = useNavigate();
 
   function hideOnClickHandler() {
     setShowPassword((prev) => !prev);
@@ -33,7 +36,6 @@ function SignIn() {
   function validateEmail(email) {
     const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
     let isEmailValid = emailRegex.test(email);
-    console.log("isEmailValid", isEmailValid);
     if (!isEmailValid) {
       setError((prev) => {
         return { ...prev, email: "Please enter a valid email" };
@@ -50,6 +52,8 @@ function SignIn() {
   function signInClickHandler() {
     console.log("form", form);
     setForm(initialFormState);
+    toast.success("You have succesfully signed up!");
+    navigate("/home");
   }
   return (
     <div className="flex flex-col h-screen">
@@ -95,7 +99,11 @@ function SignIn() {
                 >
                   <span className="mr-2">
                     {" "}
-                    {showPassword ? <BsEyeFill /> : <BsEyeSlashFill />}
+                    {showPassword ? (
+                      <BsEyeFill size={20} color={"#807D7E"} />
+                    ) : (
+                      <BsEyeSlashFill size={20} color={"#807D7E"} />
+                    )}
                   </span>{" "}
                   {showPassword ? "Show" : "Hide"}
                 </span>
