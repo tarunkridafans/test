@@ -5,12 +5,13 @@ import { FcGoogle } from "react-icons/fc";
 import { BsEyeFill } from "react-icons/bs";
 import { BsEyeSlashFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 let initialFormState = { email: "", password: "", agree: false };
 function SignUP() {
   const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState(initialFormState);
-  const [error, setError] = useState({ email: null, password: null });
+  const [formError, setFormError] = useState({ email: null, password: null });
 
   function hideOnClickHandler() {
     setShowPassword((prev) => !prev);
@@ -40,11 +41,11 @@ function SignUP() {
     const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
     let isEmailValid = emailRegex.test(email);
     if (!isEmailValid) {
-      setError((prev) => {
+      setFormError((prev) => {
         return { ...prev, email: "Please enter a valid email" };
       });
     } else {
-      setError((prev) => {
+      setFormError((prev) => {
         return { ...prev, email: null };
       });
     }
@@ -56,7 +57,7 @@ function SignUP() {
       /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
     const isPasswordValid = passwordRegex.test(password);
     if (!isPasswordValid) {
-      setError((prev) => {
+      setFormError((prev) => {
         return {
           ...prev,
           password:
@@ -64,18 +65,18 @@ function SignUP() {
         };
       });
     } else {
-      setError((prev) => {
+      setFormError((prev) => {
         return { ...prev, password: null };
       });
     }
     return isPasswordValid;
   }
 
-  function signUpClickHandler() {
+  async function signUpClickHandler() {
     console.log("form", form);
     setForm(initialFormState);
+    toast.success("You have succesfully signed up!");
   }
-
   return (
     <div className="flex flex-col h-screen">
       <Header />
@@ -108,8 +109,10 @@ function SignUP() {
                 placeholder="designer@gmail.com"
                 className=" mt-2 rounded-[8px] border-[#3C4242] border-[1px] w-full p-[0.75rem] "
               />
-              {error?.email ? (
-                <p className="text-[14px] mt-1 text-[#EE1D52]">{error.email}</p>
+              {formError?.email ? (
+                <p className="text-[14px] mt-1 text-[#EE1D52]">
+                  {formError.email}
+                </p>
               ) : null}
             </div>
 
@@ -139,9 +142,9 @@ function SignUP() {
                 Use 8 or more characters with a mix of letters, numbers &
                 symbols
               </span>
-              {error?.password ? (
+              {formError?.password ? (
                 <p className="text-[14px] mt-1 text-[#EE1D52]">
-                  {error.password}
+                  {formError.password}
                 </p>
               ) : null}
             </div>
@@ -149,7 +152,7 @@ function SignUP() {
             <div className="flex items-center text-[#807D7E] text-[14px] w-full mb-10">
               <input
                 name="agree"
-                value={form.agree}
+                checked={form.agree}
                 onChange={(e) => formOnChangeHandler(e, !form.agree)}
                 className="mr-2"
                 type="checkbox"
@@ -160,7 +163,9 @@ function SignUP() {
             <button
               onClick={signUpClickHandler}
               disabled={
-                error.email || error.password || !form.agree ? true : false
+                formError.email || formError.password || !form.agree
+                  ? true
+                  : false
               }
               className="bg-[#06105A] px-[2rem] py-[0.75rem] text-white rounded-[8px] self-start disabled:hover:cursor-not-allowed"
             >
