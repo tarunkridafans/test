@@ -20,6 +20,15 @@ function Header() {
         className="h-[80px] cursor-pointer "
       />
       <div className="mr-[2rem] flex justify-center items-center">
+        <select className="mr-8 p-[0.5rem]">
+          <option value="en-US" selected>
+            English (United States)
+          </option>
+          {/* <option value="en-GB">English (United Kingdom)</option>
+          <option value="es">Spanish</option>
+          <option value="fr">French</option> */}
+        </select>
+
         <Link to="/">
           <button
             className={`${
